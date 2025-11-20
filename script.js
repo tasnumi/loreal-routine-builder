@@ -192,3 +192,27 @@ async function main() {
   userInput.value = '';
   console.log(result);
 };
+
+function applyRTLIfNeeded() {
+  const htmlElement = document.documentElement;
+  const lang = htmlElement.lang;
+  const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
+  if (rtlLanguages.includes(lang)) {
+    htmlElement.setAttribute('dir', 'rtl');
+  }
+  else {
+    htmlElement.setAttribute('dir', 'ltr');
+  }
+}
+
+function observeGoogleTranslate() {
+  const observer = new MutationObserver(() => {
+  applyRTLIfNeeded();
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyRTLIfNeeded();
+    observeGoogleTranslate();
+});
