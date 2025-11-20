@@ -34,10 +34,10 @@ function displayProducts(products) {
       <div class="product-info">
         <h3>${product.name}</h3>
         <p>${product.brand}</p>
+      </div>
       <div class="product-overlay">
         <p>${product.description}</p>
         </div>
-      </div>
     </div>
   `
     )
@@ -55,10 +55,10 @@ function getSelectedProducts() {
   const container = document.getElementById("selectedProductsList");
   const products = [];
 
-  container.querySelectorAll(".info").forEach(item => {
+  container.querySelectorAll(":scope > div").forEach(item => {
     const name = item.dataset.name;
     const brand = item.dataset.brand;
-    products.push({name, brand});
+    if(name && brand) products.push({name, brand});
   })
 
   return products;
@@ -74,9 +74,10 @@ function selectedProducts(e) {
     const brand = card.dataset.brand;
     const item = document.createElement("div");
     item.dataset.name = name;
-    
+    item.dataset.brand = brand;
+
     item.innerHTML = `
-      <div class="info" data-name="${name}" data-brand="${brand}">
+      <div class="info">
       <h4>${brand} - ${name}</h4>
       <div><span class="material-symbols-outlined close-button" >
       close
@@ -137,13 +138,25 @@ categoryFilter.addEventListener("change", async (e) => {
 /* Chat form submission handler - placeholder for OpenAI integration */
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
-
-  chatWindow.innerHTML = "Connect to the OpenAI API for a response!";
   main();
 });
 
 generateButton.addEventListener("click", main);
 async function main() {
+  const userBubble = document.createElement("div");
+  userBubble.classList.add("chat-bubble", "user");
+  let userText = userInput.value;
+
+  if(userText) {
+    userBubble.textContent = userInput.value;
+    chatWindow.appendChild(userBubble);
+  }
+  
+  const aiBubble = document.createElement("div");
+  aiBubble.classList.add("chat-bubble", "ai");
+  aiBubble.textContent = "Generating your perfect routine...";
+
+  chatWindow.appendChild(aiBubble);
   const products = getSelectedProducts();
   const productList = products.map(p => `${p.name} - ${p.brand}`);
   console.log(productList);
@@ -159,7 +172,7 @@ async function main() {
   messages.push(
     {role: 'user', content: `Selected products: ${productList} User question: ${userInput.value}`}
   );
-  chatWindow.textContent = "Thinking...";
+  
   const response = await fetch(workerUrl, {
     method: 'POST',
     headers: {
@@ -167,19 +180,15 @@ async function main() {
     },
     body: JSON.stringify( {
       messages: messages,
-      web_serach_options: {},
+      web_search_options: {},
       temperature: 0.7,
       max_completion_tokens: 500
     })
   });
   const result = await response.json();
   messages.push({role: 'assistant', content: result.choices[0].message.content});
-  chatWindow.textContent = '';
-  
-  const background = document.createElement("div");
-  background.classList.add("response");
-  background.textContent = result.choices[0].message.content;
-  chatWindow.appendChild(background);
+  aiText = result.choices[0].message.content;
+  aiBubble.textContent = aiText;
   userInput.value = '';
   console.log(result);
 };

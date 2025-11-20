@@ -80,8 +80,36 @@ body {
   overflow-y: auto;
   background: #fafafa;
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
+.chat-bubble {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 15px;
+  line-height: 1.4;
+}
+
+.chat-bubble.user {
+  background: linear-gradient(145deg, #ff4d6d, #ff003b);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+}
+
+.chat-bubble.ai {
+  background: linear-gradient(
+    135deg,
+    #FFF8E1 0%, 
+    #FFEBCD 50%,
+    #FFE4B5 100%
+  );
+  color: black;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+}
 /* placeholder message */
 .placeholder-message {
   width: 100%;
@@ -114,7 +142,6 @@ body {
 
 .chat-form button {
   font-size: 18px;
-  /* background: #000; */
   background: linear-gradient(145deg, #ff4d6d, #ff003b);
   box-shadow: 0 4px 10px rgba(255, 0, 59, 0.4);
   color: #fff;
@@ -186,7 +213,6 @@ body {
 .product-card {
   position: relative;
   overflow: hidden;
-  opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.6s ease, transform 0.6s ease;
   animation: fadeUp 0.6s ease forwards;
@@ -213,13 +239,6 @@ body {
     opacity: 1;
   }
 }
-
-/* .product-description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  max-width: 100%;
-} */
 
 .product-card.visible {
   opacity: 1;
@@ -250,7 +269,6 @@ body {
   color: #666;
 }
 
-/* selected products */
 .selected-products {
   margin: 40px 0;
   padding: 20px;
@@ -289,6 +307,29 @@ body {
 }
 .close-button {
   cursor: pointer;
+}
+
+.product-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.product-overlay p {
+  color: white;
+  font-size: 13px;
+  
+}
+.product-card:hover .product-overlay {
+  opacity: 1; 
 }
 
 .info:hover {
@@ -343,3 +384,4 @@ body {
 .site-footer a:hover::after {
   transform: translateX(0%);
 }
+
