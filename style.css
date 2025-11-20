@@ -369,19 +369,3 @@ body {
   color: #ff003B;
   
 }
-.site-footer a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #ff003B;
-  transform: translateX(-101%);
-  transition: width 0.3s ease;
-}
-
-.site-footer a:hover::after {
-  transform: translateX(0%);
-}
-
